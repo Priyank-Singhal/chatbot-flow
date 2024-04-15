@@ -1,25 +1,22 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateSelectedNodeText } from '../utils/appSlice';
 
 const NodesPanel = () => {
-  const onDragStart = (event, nodeType) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.effectAllowed = 'move';
-  };
-
-  return (
-    <aside>
-      <div className="description">You can drag these nodes to the pane on the right.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
-        Input Node
-      </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'default')} draggable>
-        Default Node
-      </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
-        Output Node
-      </div>
-    </aside>
-  );
+    const SelectedNode = useSelector(store => store.app.selectedNode);
+    const Nodes = useSelector(store => store.node.nodes);
+    const CurrentNode = Nodes.filter(node => node.id === SelectedNode)
+    const dispatch = useDispatch();
+    const handleInputChange = ((e) => {
+        console.log(e.target.value);
+        dispatch(updateSelectedNodeText(e.target.value));
+    })
+    return (
+        <div>
+            <h1>SelectedNode: {SelectedNode}</h1>
+            <input className='border-2 border-gray' onChange={handleInputChange} />
+        </div>
+    )
 }
 
 export default NodesPanel

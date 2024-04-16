@@ -14,13 +14,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateConnections, updateSelectedNode } from '../utils/appSlice';
 import NodesPanel from './NodesPanel';
 import { addNode } from '../utils/nodeSlice';
+import CustomNode from './CustomNode';
 
+const nodeTypes = {
+  custom: CustomNode,
+};
 
 const initialNodes = [
   {
     id: 'node_0',
-    type: 'default',
-    data: { label: 'input node' },
+    type: 'custom',
+    data: { label: 'Send Message', msg: "type your message..." },
     position: { x: 250, y: 5 },
     sourcePosition: Position.Right,
     targetPosition: Position.Left
@@ -43,25 +47,26 @@ const Body = () => {
 
   useEffect(() => {
     setNodes((prevNodes) => {
-      if(AllNodes.length == 0){
+      if (AllNodes.length == 0) {
         dispatch(addNode(prevNodes))
         return prevNodes
-      } 
-      else{
+      }
+      else {
         return AllNodes
-      } 
+      }
     });
   }, [AllNodes])
 
   const handleNodeClick = ((e) => {
-    dispatch(updateSelectedNode(e.target.dataset.id))
+        console.log("e",e)
+        dispatch(updateSelectedNode(e.target.dataset.id))
   });
 
   const onConnect = useCallback(
     (params) => {
       console.log("params", params)
-      const {source, target} = params
-      dispatch(updateConnections({[source]: target }))
+      const { source, target } = params
+      dispatch(updateConnections({ [source]: target }))
       setEdges((eds) => addEdge(params, eds))
     },
     [],
@@ -74,10 +79,9 @@ const Body = () => {
 
   const isValidConnection = (connection) => {
     const SourceNode = connection.source;
-    if(Connections[SourceNode]) return false;
-    // console.log("connection",connection);
+    if (Connections[SourceNode]) return false;
     return true;
-  } 
+  }
 
   const onDrop = useCallback(
     (event) => {
@@ -90,18 +94,17 @@ const Body = () => {
         return;
       }
 
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
       const newNode = {
         id: getId(),
-        type,
+        type: 'custom',
         position,
-        data: { label: `${type} node` },
+        data: { label: 'Send Message', msg: 'item message' },
+        // sourcePosition: Position.Right,
+        // targetPosition: Position.Left
       };
       setNodes((nds) => {
         const newNodes = nds.concat(newNode);
@@ -114,17 +117,20 @@ const Body = () => {
   );
 
   return (
-    <div className="dndflow">
+    // <div className="dndflow">
+      <div className="flex flex-grow h-[100%]">
       <ReactFlowProvider>
-        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <div className="flex-grow h-[100%] w-9/12" ref={reactFlowWrapper}>
+        {/* <div className="reactflow-wrapper" ref={reactFlowWrapper}> */}
           <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            nodeTypes={nodeTypes}
             onInit={setReactFlowInstance}
-            onNodeClick={handleNodeClick}
+            // onNodeClick={handleNodeClick}
             isValidConnection={isValidConnection}
             onDrop={onDrop}
             onDragOver={onDragOver}
@@ -133,7 +139,8 @@ const Body = () => {
             <Controls />
           </ReactFlow>
         </div>
-        <div className='dndflow-aside'>
+        <div className='border border-gray-700 w-3/12'>
+        {/* <div className='dndflow-aside'> */}
           {SelectedNode == undefined ? <SettingPanel /> : <NodesPanel />}
         </div>
       </ReactFlowProvider>

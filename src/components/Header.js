@@ -18,7 +18,7 @@ const Header = () => {
   const handleClick = (() => {
     for (const node of AllNodes) {
       const nodeId = node.id;
-      if (!connectedSources.includes(nodeId) && !connectedTargets.includes(nodeId)) {
+      if (!connectedSources.includes(nodeId) && !connectedTargets.includes(nodeId) && AllNodes.length > 1) {
         setAlert(true);
         setTimeout(() => setAlert(false), 4000)
         return;

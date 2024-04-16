@@ -16,7 +16,7 @@ const nodeSlice = createSlice({
         updateNode: (state, action) => {
             const updatedArray = state.nodes.map(obj => {
                 if (obj.id === action.payload.id) {
-                    return { ...obj, data: { label: action.payload.text } }; // In this case, updating the age of object with id 2
+                    return { ...obj, data: { ...obj.data, msg: action.payload.text } }; // In this case, updating the age of object with id 2
                 }
                 return obj; // Return unchanged object if the condition doesn't match
             });

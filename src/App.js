@@ -6,7 +6,7 @@ function App() {
     <div className="App">
       <Header />
       <div className="flex">
-        <div className="w-full bg-red-200 h-[100vh]" >
+        <div className="w-full h-[100vh]" >
           <Body />
         </div>
       </div>

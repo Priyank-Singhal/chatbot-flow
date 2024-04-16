@@ -5,7 +5,8 @@ const appSlice = createSlice({
     initialState: {
         selectedNode: undefined,
         selectedNodeText: "",
-        connections: {}
+        connections: {},
+        savingInProgess: false
     },
     reducers: {
         updateSelectedNode: (state, action) => {
@@ -15,17 +16,15 @@ const appSlice = createSlice({
             state.selectedNodeText = action.payload
         },
         updateConnections: (state, action) => {
-            console.log("action.payload", action.payload)
             const newConnection = action.payload
-            // console.log("source", source)
-            // console.log("target", target)
-            const NewConnections = {...state.connections, ...newConnection }
-            console.log("NewConnections",NewConnections)
-            state.connections = NewConnections
+            state.connections = {...state.connections, ...newConnection }
+        },
+        updateSavingProgress: (state, action) => {
+            state.savingInProgess = action.payload
         }
     }
 })
 
-export const {updateSelectedNode, updateSelectedNodeText, updateConnections} = appSlice.actions;
+export const {updateSelectedNode, updateSelectedNodeText, updateConnections, updateSavingProgress} = appSlice.actions;
 
 export default appSlice.reducer;

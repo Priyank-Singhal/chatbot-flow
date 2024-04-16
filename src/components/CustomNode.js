@@ -6,9 +6,6 @@ import { updateSelectedNode } from '../utils/appSlice';
 const CustomNode = ({ data, id }) => {
     const dispatch = useDispatch();
     const handleNodeClick = ((e) => {
-        console.log("clicked")
-        console.log(e)
-        console.log(id)
         dispatch(updateSelectedNode(id))
     });
     return (
@@ -16,12 +13,12 @@ const CustomNode = ({ data, id }) => {
             <div className="bg-teal-200 w-full flex items-center justify-between px-2">
                 <div className='flex items-center'>
                     <span>
-                        <svg className="h-3 w-3" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />  <line x1="8" y1="9" x2="16" y2="9" />  <line x1="8" y1="13" x2="14" y2="13" /></svg>
+                        <svg className="h-3 w-3" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />  <line x1="8" y1="9" x2="16" y2="9" />  <line x1="8" y1="13" x2="14" y2="13" /></svg>
                     </span>
                     <span className="text-sm font-semibold px-2">{data.label}</span>
                 </div>
                 <div className="rounded-full w-4 h-4 flex justify-center items-center bg-white">
-                    <span class="[&>svg]:h-3 [&>svg]:w-3 [&>svg]:fill-[#128c7e]">
+                    <span className="[&>svg]:h-3 [&>svg]:w-3 [&>svg]:fill-[#128c7e]">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"

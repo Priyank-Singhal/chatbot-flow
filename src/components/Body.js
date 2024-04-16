@@ -11,7 +11,7 @@ import 'reactflow/dist/style.css';
 import SettingPanel from './SettingPanel';
 import '../index.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConnections, updateSelectedNode } from '../utils/appSlice';
+import { updateConnections, updateSavingProgress, updateSelectedNode } from '../utils/appSlice';
 import NodesPanel from './NodesPanel';
 import { addNode } from '../utils/nodeSlice';
 import CustomNode from './CustomNode';
@@ -44,6 +44,7 @@ const Body = () => {
   const SelectedNode = useSelector(store => store.app.selectedNode)
   const AllNodes = useSelector(store => store.node.nodes)
   const Connections = useSelector(store => store.app.connections)
+  const SavingInProgess = useSelector(store => store.app.savingInProgess)
 
   useEffect(() => {
     setNodes((prevNodes) => {
@@ -57,14 +58,15 @@ const Body = () => {
     });
   }, [AllNodes])
 
-  const handleNodeClick = ((e) => {
-        console.log("e",e)
-        dispatch(updateSelectedNode(e.target.dataset.id))
-  });
+  useEffect(() => {
+    if (SavingInProgess) {
+      dispatch(addNode(nodes))
+      dispatch(updateSavingProgress(false))
+    }
+  }, [SavingInProgess])
 
   const onConnect = useCallback(
     (params) => {
-      console.log("params", params)
       const { source, target } = params
       dispatch(updateConnections({ [source]: target }))
       setEdges((eds) => addEdge(params, eds))
@@ -102,9 +104,7 @@ const Body = () => {
         id: getId(),
         type: 'custom',
         position,
-        data: { label: 'Send Message', msg: 'item message' },
-        // sourcePosition: Position.Right,
-        // targetPosition: Position.Left
+        data: { label: 'Send Message', msg: 'type your message...' },
       };
       setNodes((nds) => {
         const newNodes = nds.concat(newNode);
@@ -117,11 +117,9 @@ const Body = () => {
   );
 
   return (
-    // <div className="dndflow">
-      <div className="flex flex-grow h-[100%]">
+    <div className="flex flex-grow h-[100%]">
       <ReactFlowProvider>
         <div className="flex-grow h-[100%] w-9/12" ref={reactFlowWrapper}>
-        {/* <div className="reactflow-wrapper" ref={reactFlowWrapper}> */}
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -130,7 +128,6 @@ const Body = () => {
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             onInit={setReactFlowInstance}
-            // onNodeClick={handleNodeClick}
             isValidConnection={isValidConnection}
             onDrop={onDrop}
             onDragOver={onDragOver}
@@ -140,7 +137,6 @@ const Body = () => {
           </ReactFlow>
         </div>
         <div className='border border-gray-700 w-3/12'>
-        {/* <div className='dndflow-aside'> */}
           {SelectedNode == undefined ? <SettingPanel /> : <NodesPanel />}
         </div>
       </ReactFlowProvider>
